@@ -1,0 +1,103 @@
+<h1>Welcome, <%= @user.first_name %></h1>
+<br>
+<h3>Here are some of the events in your state:</h3>
+<div class="state_events">
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Date</th>
+				<th>Location</th>
+				<th>Host</th>
+				<th>Action/Status</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @events.each do |event|%>
+				<tr>
+					<td><%=event.name%></td>
+					<td><%=event.date%></td>
+					<td><%=event.city%></td>
+					<td><%=event.user.first_name%></td>
+					<td>
+						<%if event.attendees.include?(@user)%>
+							<form action="/events/leave" method="post">
+								<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+								<input type="hidden" value="<%=event.id%>" name="event_id">
+								<input name="_method" value="delete" type="hidden">
+								<p>Joining<input type="submit" value="Cancel"></p>
+							</form>
+						<% else %>
+							<form action="/events/join" method="post">
+								<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+								<input type="hidden" value="<%=event.id%>" name="event_id">
+								<input type="submit" value="Join">
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+	<br>
+</div>
+<div class="other_state_events">
+	<br>
+	<h3>Here are some of the events in other states:</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Date</th>
+				<th>City</th>
+				<th>State</th>
+				<th>Host</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @other_events.each do |event|%>
+				<tr>
+					<td><%=event.name%></td>
+					<td><%=event.date%></td>
+					<td><%=event.city%></td>
+					<td><%=event.state%></td>
+					<td><%=event.user.first_name%></td>
+					<td>
+					<form action="/events/join" method="post">
+						<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+						<input type="hidden" value="<%=event.id%>" name="event_id">
+						<input type="submit" value="Join">
+					</form>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+</div>
+
+<div class="add_event">
+	<h2>Add Event</h2>
+	<form action="/create" method="post">
+		<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+		<p>Name:<input type="text" name="name"></p>
+		<p>Date:<input type="date" name="date"></p>
+		<p>Location:<input type="text" name="city">
+		<select name="state">
+		  <option value="WA">WA</option>
+		  <option value="OR">OR</option>
+		  <option value="ID">ID</option>
+		</select></p>
+		<input type="submit" value="Add Event">
+	</form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
